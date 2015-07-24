@@ -1,0 +1,77 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/firebase-element/firebase-auth.html">
+<dom-module id="fire-login">
+  <template>
+    <firebase-auth id="firebaseLogin" user="{{user}}" status-known="{{statusKnown}}" location="https://luminous-torch-7317.firebaseio.com/" provider="{{provider}}" on-error="errorHandler"></firebase-auth>
+  
+    <div id="message">[[message]]</div>
+    <button on-tap="login" hidden$="{{computeLoginHidden(statusKnown, user)}}">Login</button>
+    <button on-tap="logout" hidden$="{{computeLogoutHidden(statusKnown, user)}}">Logout</button>
+
+    <h3>Login status:</h3>
+    <p>{{computeLoginStatus(statusKnown, user)}}</p>
+
+    <h3>User ID:</h3>
+    <pre>{{user.uid}}</pre>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'fire-login',
+
+    properties: {
+      provider: {
+        type: String,
+        value: 'github'
+      },
+
+      message: {
+        type: String,
+        value: ''
+      },
+
+      user: {
+        type: Object,
+        value: null
+      },
+
+      statusKnown: {
+        type: Boolean
+      }
+    },
+
+    login: function() {
+      this.$.firebaseLogin.login();
+    },
+
+    logout: function() {
+      this.$.firebaseLogin.logout();
+    },
+
+    errorHandler: function(e) {
+      this.message = 'Error: ' + e.detail.message;
+    },
+    computeLoginHidden: function(statusKnown, user) {
+      console.log(statusKnown);
+      return !statusKnown || !!user;
+    },
+
+    computeLogoutHidden: function(statusKnown, user) {
+      console.log(statusKnown);
+      console.log(!user);
+      return !statusKnown || !user;
+    },
+
+    computeLoginStatus: function(statusKnown, user) {
+      if (statusKnown && user) {
+        return 'Logged in';
+      }
+
+      if (statusKnown) {
+        return 'Logged out';
+      }
+
+      return 'Unknown (checking status...)';
+    }
+  });
+</script>
