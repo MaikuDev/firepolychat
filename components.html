@@ -1,0 +1,25 @@
+<link rel="import" href="bower_components/firebase-element/firebase-collection.html">
+<link rel="import" href="bower_components/firebase-element/firebase-document.html">
+<link rel="import" href="bower_components/polymer/polymer.html">
+<dom-module id="fire-chat">
+  <template>
+    <firebase-collection
+      id="firedate"
+      limit-to-last="15"
+      location="https://luminous-torch-7317.firebaseio.com/"
+      data="{{mensajes}}">
+    </firebase-collection>
+    <input id="name" value="{{nombre::input}}"/>
+    <input id="text" on-keypress="send"  value="{{mensaje::input}}"/>
+    <template is="dom-repeat" items="[[mensajes]]" as="chats">
+      <h4>[[dinosaur.__firebaseKey__]]</h4>
+      <span>name: </span><span>[[chats.name]]</span><span></span>
+       <span>mensaje: </span><span>[[chats.text]]</span><span></span>
+    </template>
+  </template>
+  <script>
+  Polymer({
+    is: "fire-chat"
+  });
+</script>
+</dom-module>

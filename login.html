@@ -12,7 +12,8 @@
     <p>{{computeLoginStatus(statusKnown, user)}}</p>
 
     <h3>User ID:</h3>
-    <pre>{{user.uid}}</pre>
+    <pre>{{user}}</pre>
+
   </template>
 </dom-module>
 <script>
@@ -62,8 +63,18 @@
       return !statusKnown || !user;
     },
 
+    getcookie: function(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        var expires = "expires="+d.toUTCString();
+        document.cookie = cname + "=" + cvalue + "; " + expires;
+    },
+
     computeLoginStatus: function(statusKnown, user) {
       if (statusKnown && user) {
+        this.getcookie('name',user.github.username);
+        this.getcookie('avatar',user.github.profileImageURL);
+        location.href="http://127.0.0.1:51792/firepolychat/chat.html";
         return 'Logged in';
       }
 
